@@ -71,12 +71,12 @@ muduo网络库里的日志系统并不是很优秀
     * Poller抽象类(用于封装select, poll, epoll)
       * PollPoller
       * EPollPoller(目前只实现了这个)
-        * ChannelMap(管理当前Loop关心的那些Channel对象)
+      * ChannelMap(管理当前Loop关心的那些Channel对象)
         * `Channelmap<fd, Channel*>`
         * ChannelMap记录着sockfd及其对应的Channel对象
-    * ChannelList(管理当前Loop的所有Channel对象)
-      * Channel**(管理sockfd及其关心的events)**⭐️
-      * 
+    * ChannelList activechannel_
+      * 保存活跃的channels，交给事件处理程序
+      * 每次处理完毕activechannel_都要他都要clear一下
   * EventLoop
   * ...
   * EventLoop
@@ -129,5 +129,3 @@ muduo网络库里的日志系统并不是很优秀
 
 
 下面这个图存一个档，我觉得画的不太贴合muduo网络库，但是抽象层面似乎挺有逻辑，看看能不能改进一下，结合muduo网络库具体的类再重制一下这个结构图
-
-![1697976958917](image/README/1697976958917.png)

@@ -37,7 +37,7 @@ int createEventfd()
 EventLoop::EventLoop()
     : looping_(false),                             // 创建EventLoop对象时还没启动循环，还需要后续调用才能启动
       quit_(false),                                // 显然刚创建EventLoop对象时不会是退出状态
-      callingPendingFunctors_(false),              // 标识当前loop是否有需要执行的回调操作
+      callingPendingFunctors_(false),              // 标识当前loop是否正在执行的回调操作
       threadId_(CurrentThread::tid()),             // 获取当前线程的thread id，存着，以防止该线程继续创建EventLoop对象(实现One Loop Per Thread)
       poller_(Poller::newDefaultPoller(this)),     // 初始化poller_，其实就是初始化一个EPollPoller对象，因为我们只实现了epoll，没有实现select和poll
       wakeupFd_(createEventfd()),                  // 创建eventfd初始化wakeupFd_
@@ -54,6 +54,8 @@ EventLoop::EventLoop()
         t_loopInThisThread = this; // 防止同一个thread创建两个EventLoop
     }
 
+    // 设置wakeupfd的事件类型（读事件）和事件回调操作
+
     // readCallback_ = std::bind(&EventLoop::handleRead, this) 后this->handleRead()等价于readCallback_()
     // 这里有一个bug，setReadCallback对应using ReadEventCallback = std::function<void(Timestamp)>;而handleRead没有参数，为啥也能正常编译不报错呢？
     wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this));
@@ -65,6 +67,8 @@ EventLoop::EventLoop()
 
 EventLoop::~EventLoop()
 {
+    // 这里不用判断是否在当前线程，因为EventLoop的析构函数只能在创建它的线程中调用
+    // 非智能指针管理的成员要自己手动释放
     wakeupChannel_->disableAll();
     wakeupChannel_->remove();
     ::close(wakeupFd_);
@@ -81,17 +85,24 @@ void EventLoop::loop()
 
     while (!quit_)
     {
-        activeChannels_.clear();                                        // 要先清空
-        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_); // 监听两类fd：一种是client的fd，一种是wakeupfd
-        for (Channel *channel : activeChannels_)                        // 挨个取出有活跃事件的channel，进行相应处理
+        // 要先清空上一次使用的activeChannels_里的内容
+        activeChannels_.clear();    
+
+        // 获取当前活跃的事件，返回的是发生事件的fd的个数           
+        // 这里监听了两类fd：一种是client的fd，一种是wakeupfd                         
+        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_); 
+
+        // 挨个取出有活跃事件的channel，进行相应处理
+        for (Channel *channel : activeChannels_)                        
         {
+            // Poller监听哪些channel发生了事件，上报给EventLoop，EventLoop再调用Channel的handleEvent方法
             channel->handleEvent(pollReturnTime_);
         }
+
         // 执行当前EventLoop事件循环需要处理的回调操作
-        /**
-         * IO线程 mainLoop accept fd《=channel subloop
-         * mainLoop 事先注册一个回调cb（需要subloop来执行）    wakeup subloop后，执行下面的方法，执行之前mainloop注册的cb操作
-         */
+        // 为啥处理完activeChannels_后，还要处理pendingFunctors_呢？
+        // 27 EventLoop事件循环三_ev.mp4 这个视频里有提到，但是我觉得讲的有些乱
+        // 后续要倒回来理顺一下
         doPendingFunctors();
     }
 
@@ -156,7 +167,7 @@ void EventLoop::queueInLoop(Functor cb)
  */
 void EventLoop::handleRead()
 {
-    uint64_t one = 1;
+    uint64_t one = 1; // 发啥不重要，重要的是起到通知的作用
     ssize_t n = read(wakeupFd_, &one, sizeof one);
     if (n != sizeof one)
     {

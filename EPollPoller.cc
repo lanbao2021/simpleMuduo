@@ -70,12 +70,12 @@ Timestamp EPollPoller::poll(int timeoutMs, ChannelList *activeChannels)
 
 // channel update remove => EventLoop updateChannel removeChannel => Poller updateChannel removeChannel
 /**
- *                  EventLoop
- *      ChannelList             Poller
- *                          ChannelMap<fd, Channel*>
+ *                          EventLoop
+ *      activate_channels_               Poller
+ *                                  ChannelMap<fd, Channel*>
  *
- *      ChannelList => ChannelMap => epoll_event
- *      ChannelList的size会大于ChannelMap的size
+ *     activate_channels_仅存放部分活跃的channel对象
+ *     ChannelMap则是管理当前loop所有的channel对象
  */
 // 更新channel通道的状态
 void EPollPoller::updateChannel(Channel *channel)

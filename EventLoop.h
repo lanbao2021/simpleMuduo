@@ -51,7 +51,7 @@ private:
     // 标识，都是原子操作，通过CAS实现的（这个CAS是啥？）
     std::atomic_bool looping_;                // 标识是否开启循环
     std::atomic_bool quit_;                   // 标识是否退出loop循环（感觉跟loop_有重叠？）
-    std::atomic_bool callingPendingFunctors_; // 标识当前loop是否有需要执行的回调操作
+    std::atomic_bool callingPendingFunctors_; // 标识当前loop是否正在执行的回调操作
     std::vector<Functor> pendingFunctors_;    // 存储loop需要执行的所有的回调操作
 
     std::mutex mutex_; // 互斥锁，用来保护上面vector容器的线程安全操作，因为STL容器都不是线程安全的
