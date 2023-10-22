@@ -12,11 +12,11 @@ A simplified Muduo network lib using C++ 11 features.
 * [ ] 各个模块都是干嘛的？
 * [ ] 一个客户连接来了后会发生什么？
 
-## 模块解析
+# 模块解析
 
 * [X] noncopyable
-* [ ] Logger
-* [ ] Timestamp
+* [X] Logger
+* [X] Timestamp
 * [ ] InetAddress
 * [ ] Channel
 * [ ] Poller
@@ -28,11 +28,11 @@ A simplified Muduo network lib using C++ 11 features.
 * [ ] Acceptor
 * [ ] TcpServer
 
-### noncopyable
+## noncopyable
 
 noncopyable被继承以后，派生类对象可以正常的构造和析构，但是派生类对象无法进行拷贝构造和赋值操作，通过 `= delete` 实现，有点像单例模式？感觉就是啊
 
-### Logger
+## Logger
 
 定义了几个宏来写不同级别的日志：
 
@@ -56,7 +56,11 @@ noncopyable被继承以后，派生类对象可以正常的构造和析构，但
     } while (0)
 ```
 
-## 多Reactor 多线程
+## InetAddress
+
+封装socket地址类型
+
+# 多Reactor 多线程
 
 这里有一个问题后续再明确一下，就是SubReactor是否会将业务处理交给WorkThread
 

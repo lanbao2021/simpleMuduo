@@ -1,0 +1,87 @@
+[
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Acceptor.o -c /home/lfc/myGitHubRepos/simpleMuduo/Acceptor.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Acceptor.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Buffer.o -c /home/lfc/myGitHubRepos/simpleMuduo/Buffer.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Buffer.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Channel.o -c /home/lfc/myGitHubRepos/simpleMuduo/Channel.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Channel.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/CurrentThread.o -c /home/lfc/myGitHubRepos/simpleMuduo/CurrentThread.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/CurrentThread.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/DefaultPoller.o -c /home/lfc/myGitHubRepos/simpleMuduo/DefaultPoller.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/DefaultPoller.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/EPollPoller.o -c /home/lfc/myGitHubRepos/simpleMuduo/EPollPoller.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/EPollPoller.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/EventLoop.o -c /home/lfc/myGitHubRepos/simpleMuduo/EventLoop.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/EventLoop.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/EventLoopThread.o -c /home/lfc/myGitHubRepos/simpleMuduo/EventLoopThread.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/EventLoopThread.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/EventLoopThreadPool.o -c /home/lfc/myGitHubRepos/simpleMuduo/EventLoopThreadPool.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/EventLoopThreadPool.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/InetAddress.o -c /home/lfc/myGitHubRepos/simpleMuduo/InetAddress.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/InetAddress.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Logger.o -c /home/lfc/myGitHubRepos/simpleMuduo/Logger.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Logger.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Poller.o -c /home/lfc/myGitHubRepos/simpleMuduo/Poller.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Poller.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Socket.o -c /home/lfc/myGitHubRepos/simpleMuduo/Socket.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Socket.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/TcpConnection.o -c /home/lfc/myGitHubRepos/simpleMuduo/TcpConnection.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/TcpConnection.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/TcpServer.o -c /home/lfc/myGitHubRepos/simpleMuduo/TcpServer.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/TcpServer.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Thread.o -c /home/lfc/myGitHubRepos/simpleMuduo/Thread.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Thread.cc"
+},
+{
+  "directory": "/home/lfc/myGitHubRepos/simpleMuduo/build",
+  "command": "/usr/bin/g++ -Dmymuduo_EXPORTS   -g -std=c++11 -fPIC -g -fPIC -o CMakeFiles/mymuduo.dir/Timestamp.o -c /home/lfc/myGitHubRepos/simpleMuduo/Timestamp.cc",
+  "file": "/home/lfc/myGitHubRepos/simpleMuduo/Timestamp.cc"
+}
+]

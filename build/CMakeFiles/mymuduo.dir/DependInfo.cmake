@@ -1,31 +1,30 @@
+
+# Consider dependencies only in project.
+set(CMAKE_DEPENDS_IN_PROJECT_ONLY OFF)
+
 # The set of languages for which implicit dependencies are needed:
 set(CMAKE_DEPENDS_LANGUAGES
-  "CXX"
   )
-# The set of files for implicit dependencies of each language:
-set(CMAKE_DEPENDS_CHECK_CXX
-  "/home/tony/projects/mymuduo/Acceptor.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Acceptor.o"
-  "/home/tony/projects/mymuduo/Buffer.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Buffer.o"
-  "/home/tony/projects/mymuduo/Channel.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Channel.o"
-  "/home/tony/projects/mymuduo/CurrentThread.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/CurrentThread.o"
-  "/home/tony/projects/mymuduo/DefaultPoller.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/DefaultPoller.o"
-  "/home/tony/projects/mymuduo/EPollPoller.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/EPollPoller.o"
-  "/home/tony/projects/mymuduo/EventLoop.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/EventLoop.o"
-  "/home/tony/projects/mymuduo/EventLoopThread.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/EventLoopThread.o"
-  "/home/tony/projects/mymuduo/EventLoopThreadPool.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/EventLoopThreadPool.o"
-  "/home/tony/projects/mymuduo/InetAddress.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/InetAddress.o"
-  "/home/tony/projects/mymuduo/Logger.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Logger.o"
-  "/home/tony/projects/mymuduo/Poller.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Poller.o"
-  "/home/tony/projects/mymuduo/Socket.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Socket.o"
-  "/home/tony/projects/mymuduo/TcpConnection.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/TcpConnection.o"
-  "/home/tony/projects/mymuduo/TcpServer.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/TcpServer.o"
-  "/home/tony/projects/mymuduo/Thread.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Thread.o"
-  "/home/tony/projects/mymuduo/Timestamp.cc" "/home/tony/projects/mymuduo/build/CMakeFiles/mymuduo.dir/Timestamp.o"
-  )
-set(CMAKE_CXX_COMPILER_ID "GNU")
 
-# The include file search paths:
-set(CMAKE_CXX_TARGET_INCLUDE_PATH
+# The set of dependency files which are needed:
+set(CMAKE_DEPENDS_DEPENDENCY_FILES
+  "/home/lfc/myGitHubRepos/simpleMuduo/Acceptor.cc" "CMakeFiles/mymuduo.dir/Acceptor.o" "gcc" "CMakeFiles/mymuduo.dir/Acceptor.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/Buffer.cc" "CMakeFiles/mymuduo.dir/Buffer.o" "gcc" "CMakeFiles/mymuduo.dir/Buffer.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/Channel.cc" "CMakeFiles/mymuduo.dir/Channel.o" "gcc" "CMakeFiles/mymuduo.dir/Channel.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/CurrentThread.cc" "CMakeFiles/mymuduo.dir/CurrentThread.o" "gcc" "CMakeFiles/mymuduo.dir/CurrentThread.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/DefaultPoller.cc" "CMakeFiles/mymuduo.dir/DefaultPoller.o" "gcc" "CMakeFiles/mymuduo.dir/DefaultPoller.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/EPollPoller.cc" "CMakeFiles/mymuduo.dir/EPollPoller.o" "gcc" "CMakeFiles/mymuduo.dir/EPollPoller.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/EventLoop.cc" "CMakeFiles/mymuduo.dir/EventLoop.o" "gcc" "CMakeFiles/mymuduo.dir/EventLoop.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/EventLoopThread.cc" "CMakeFiles/mymuduo.dir/EventLoopThread.o" "gcc" "CMakeFiles/mymuduo.dir/EventLoopThread.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/EventLoopThreadPool.cc" "CMakeFiles/mymuduo.dir/EventLoopThreadPool.o" "gcc" "CMakeFiles/mymuduo.dir/EventLoopThreadPool.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/InetAddress.cc" "CMakeFiles/mymuduo.dir/InetAddress.o" "gcc" "CMakeFiles/mymuduo.dir/InetAddress.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/Logger.cc" "CMakeFiles/mymuduo.dir/Logger.o" "gcc" "CMakeFiles/mymuduo.dir/Logger.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/Poller.cc" "CMakeFiles/mymuduo.dir/Poller.o" "gcc" "CMakeFiles/mymuduo.dir/Poller.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/Socket.cc" "CMakeFiles/mymuduo.dir/Socket.o" "gcc" "CMakeFiles/mymuduo.dir/Socket.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/TcpConnection.cc" "CMakeFiles/mymuduo.dir/TcpConnection.o" "gcc" "CMakeFiles/mymuduo.dir/TcpConnection.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/TcpServer.cc" "CMakeFiles/mymuduo.dir/TcpServer.o" "gcc" "CMakeFiles/mymuduo.dir/TcpServer.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/Thread.cc" "CMakeFiles/mymuduo.dir/Thread.o" "gcc" "CMakeFiles/mymuduo.dir/Thread.o.d"
+  "/home/lfc/myGitHubRepos/simpleMuduo/Timestamp.cc" "CMakeFiles/mymuduo.dir/Timestamp.o" "gcc" "CMakeFiles/mymuduo.dir/Timestamp.o.d"
   )
 
 # Targets to which this target links.
