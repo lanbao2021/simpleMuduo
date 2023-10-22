@@ -21,9 +21,10 @@ A simplified Muduo network lib using C++ 11 features.
 * [X] Logger
 * [X] Timestamp
 * [X] InetAddress
-* [ ] Channel
-* [ ] Poller
-* [ ] EpollPoller
+* [X] Channel
+* [X] Poller
+* [X] EpollPoller
+* [ ] 获取线程tid
 * [ ] EventLoop
 * [ ] Thread
 * [ ] EventLoopThread
@@ -99,6 +100,18 @@ muduo网络库里的日志系统并不是很优秀
 封装epoll_wait成poll方法
 
 通过以上封装就很好理解EPollPoller干的事情了，监听sockfd上的事件然后更新相应的数据结构，交给时间处理函数EventHandler
+
+## 获取线程tid
+
+如何获取当前线程的tid?
+
+请注意：是获取“线程tid"不是进程“pid"
+
+`ps -ef | grep mysqld`获取的是pid
+
+![1697976155794](image/README/1697976155794.png)
+
+
 
 ## EventLoop
 
