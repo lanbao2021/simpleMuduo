@@ -54,12 +54,13 @@ EventLoop::EventLoop()
         t_loopInThisThread = this; // 防止同一个thread创建两个EventLoop
     }
 
-    // 设置wakeupfd的事件类型（读事件）和事件回调操作
+    
 
+    // 当wakeupChannel_上有读事件发生时，就会调用当前EventLoop的handleRead()方法
     // readCallback_ = std::bind(&EventLoop::handleRead, this) 后this->handleRead()等价于readCallback_()
     // 这里有一个bug，setReadCallback对应using ReadEventCallback = std::function<void(Timestamp)>;而handleRead没有参数，为啥也能正常编译不报错呢？
-    wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this));
-    wakeupChannel_->enableReading();
+    wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this)); // 先设置回调函数
+    wakeupChannel_->enableReading(); // 开启事件监听
     // enableReading虽然是Channel对象封装的方法，但实际上是这么一个过程：
     // Channel.enableReading -> Channel.update -> EventLoop.updateChannel -> EpollPoller.updateChannel -> EPollPoller.update
     // 为啥要绕一圈呢？因为Poller才能操作fd的属性，所以要借助EventLoop调用epoll的方法
@@ -155,19 +156,20 @@ void EventLoop::queueInLoop(Functor cb)
     if (!isInLoopThread() || callingPendingFunctors_)
     {
         wakeup(); // 唤醒loop所在线程 （这其实是this->wakeup())
+        // ？？？难道不是自己叫醒自己吗，这里没懂
     }
 }
 
 /**
  * @brief 处理wakeupFd_上的EPOLLIN读事件
  *
- * 我没理解错的话，这里其实就是象征性读一下，清空对应事件的缓冲区
+ * 我没理解错的话，这里其实就是象征性读一下，清空对应事件的缓冲区（是这样的，2023-10-22）
  *
  * 实际意义是让“LOOP”继续往下执行回调函数，对应doPendingFunctors()
  */
 void EventLoop::handleRead()
 {
-    uint64_t one = 1; // 发啥不重要，重要的是起到通知的作用
+    uint64_t one = 1; 
     ssize_t n = read(wakeupFd_, &one, sizeof one);
     if (n != sizeof one)
     {

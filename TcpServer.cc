@@ -21,7 +21,7 @@ TcpServer::TcpServer(EventLoop *loop, const InetAddress &listenAddr, const std::
       acceptor_(new Acceptor(loop, listenAddr, option == kReusePort)), // 新建Acceptor对象，但是构造函数中并没有启动listen
       threadPool_(new EventLoopThreadPool(loop, name_)),               // 创建线程池对象，但是构造函数中还没真的创建多个线程
       connectionCallback_(),                                           // ！这个为啥要在初始化列表出现？我觉得没有意义，并且没传入参数，不知道为啥还能正常运行
-      messageCallback_(),                                              // ！这个为啥要在初始化列表出现？我觉得没有意义
+      messageCallback_(),                                              // ！这个为啥要在初始化列表出现？我觉得没有意义(2023-10-23，确实没意义，只是用来检测一下的其实，可以问GPT)
       nextConnId_(1),                                                  // 下一个连接的编号就要从1开始算了
       started_(0)                                                      // 建立TcpServer时还没启动，还需要后续调用start()
 {
