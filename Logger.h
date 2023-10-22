@@ -6,6 +6,8 @@
 
 // LOG_INFO("%s %d", arg1, arg2)
 // 如果忘了这一段代码的含义可以丢到GPT里面去
+// do_while(0)防止宏定义的时候出现一些问题
+// \的作用是换行，后面不能跟空格
 #define LOG_INFO(logmsgFormat, ...)                       \
     do                                                    \
     {                                                     \
@@ -67,6 +69,7 @@ public:
     static Logger &instance();   // 获取日志唯一的实例对象
     void setLogLevel(int level); // 设置日志级别
     void log(std::string msg);   // 写日志
+
 private:
-    int logLevel_;
+    int logLevel_; // 日志级别，高于该级别的日志才会被输出
 };

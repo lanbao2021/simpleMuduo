@@ -4,16 +4,16 @@
 #include <iostream>
 
 // 获取日志唯一的实例对象
-Logger& Logger::instance()
+Logger &Logger::instance()
 {
-    static Logger logger;
-    return logger;
+    static Logger logger; // 静态局部变量，线程安全
+    return logger;        // 返回日志对象
 }
 
 // 设置日志级别
 void Logger::setLogLevel(int level)
 {
-    logLevel_ = level;
+    logLevel_ = level; // 设置日志级别
 }
 
 // 写日志  [级别信息] time : msg
