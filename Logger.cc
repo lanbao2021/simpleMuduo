@@ -16,6 +16,7 @@ void Logger::setLogLevel(int level)
     logLevel_ = level; // 设置日志级别
 }
 
+// 2023-10-22突然想到，这里的case是不是应该不能break，因为如果是INFO级别的日志，那么ERROR和FATAL级别的日志也应该打印出来
 // 写日志  [级别信息] time : msg
 void Logger::log(std::string msg)
 {

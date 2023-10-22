@@ -9,33 +9,23 @@
 #include <errno.h>
 #include <memory>
 
-/**
- * @brief 防止一个线程创建多个EventLoop
- *
- * __thread修饰的变量的作用域仅在当前作用域内
- */
+// __thread修饰的变量是线程局部存储的，每个线程有一份独立实体，各个线程的值互不干扰
+// t_loopInThisThread全局变量是线程局部存储的EventLoop指针
+// 每个线程只能有一个EventLoop对象，所以这里用t_loopInThisThread来保存EventLoop对象的指针
+// 以后要是再创建EventLoop对象，就会直接报错
 __thread EventLoop *t_loopInThisThread = nullptr;
 
-/**
- * @brief Poller IO复用接口的超时时间
- *
- * 在超时前如果监听的fd上没有事件发生那么就阻塞着
- */
-const int kPollTimeMs = 10000;
+// Poller IO复用接口的超时时间
+// 在超时前如果监听的fd上没有事件发生那么就阻塞着
+const int kPollTimeMs = 10000; // 单位：毫秒
 
-/**
- * @brief Create a Eventfd object
- *
- * 每个EventLoop都会有一个Eventfd，对应 wakeupFd_ 成员变量。
- *
- * 它的作用是让EventLoop里的“Loop”不要继续阻塞在epoll_wait里，继续往下执行，后续还有回调函数需要执行（对应 doPendingFunctors()）
- *
- * 它是如何起到这种通知作用的呢？其实本质上也是让epoll监听文件描述符
- *
- * @return int
- */
+// 创建eventfd，用notify唤醒subloop
 int createEventfd()
 {
+    // 0表示eventfd对象的64位内部计数器的初始值
+    // 初始值为0的话，读它的值会阻塞，直到有写入为止
+    // EFD_NONBLOCK表示eventfd对象是非阻塞的，读它的值会立即返回，没有可读事件errno被设置为EAGAIN
+    // EFD_CLOEXEC表示通过exec调用时关闭父进程的eventfd对象(应该是这样理解的，跟那个EPOLL_CLOEXEC标志位类似)
     int evtfd = ::eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
     if (evtfd < 0)
     {
@@ -48,10 +38,10 @@ EventLoop::EventLoop()
     : looping_(false),                             // 创建EventLoop对象时还没启动循环，还需要后续调用才能启动
       quit_(false),                                // 显然刚创建EventLoop对象时不会是退出状态
       callingPendingFunctors_(false),              // 标识当前loop是否有需要执行的回调操作
-      threadId_(CurrentThread::tid()),             // 获取当前线程的thread id，存着，以防止该线程继续创建EventLoop对象(One Loop Per Thread)
-      poller_(Poller::newDefaultPoller(this)),     // 初始化poller_，其实就是epoll，因为我们只实现了epoll，没有实现select和poll
+      threadId_(CurrentThread::tid()),             // 获取当前线程的thread id，存着，以防止该线程继续创建EventLoop对象(实现One Loop Per Thread)
+      poller_(Poller::newDefaultPoller(this)),     // 初始化poller_，其实就是初始化一个EPollPoller对象，因为我们只实现了epoll，没有实现select和poll
       wakeupFd_(createEventfd()),                  // 创建eventfd初始化wakeupFd_
-      wakeupChannel_(new Channel(this, wakeupFd_)) // 为wakeupFd_创建对应的channel，每一个fd都有对应的channel
+      wakeupChannel_(new Channel(this, wakeupFd_)) // 为wakeupFd_创建对应的channel，每一个fd都有对应的channel，eventfd也不例外
 {
     LOG_DEBUG("EventLoop created %p in thread %d \n", this, threadId_);
 
@@ -64,21 +54,13 @@ EventLoop::EventLoop()
         t_loopInThisThread = this; // 防止同一个thread创建两个EventLoop
     }
 
-    /**
-     * @brief 设置wakeupfd的事件类型以及发生事件后的回调操作
-     *
-     * 每一个eventloop都将监听wakeupchannel的EPOLLIN读事件
-     *
-     * 这里bind的this是EventLoop的this哦，要想清楚，不要误以为是wakeupChannel_的
-     *
-     * enableReading虽然是Channel对象封装的方法，但实际上是这么一个过程：
-     *
-     * Channel.enableReading -> Channel.update -> EventLoop.updateChannel -> EpollPoller.updateChannel -> EPollPoller.update
-     *
-     * 为啥要绕一圈呢？因为Poller才能操作fd的属性，所以要借助EventLoop调用epoll的方法
-     */
+    // readCallback_ = std::bind(&EventLoop::handleRead, this) 后this->handleRead()等价于readCallback_()
+    // 这里有一个bug，setReadCallback对应using ReadEventCallback = std::function<void(Timestamp)>;而handleRead没有参数，为啥也能正常编译不报错呢？
     wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this));
     wakeupChannel_->enableReading();
+    // enableReading虽然是Channel对象封装的方法，但实际上是这么一个过程：
+    // Channel.enableReading -> Channel.update -> EventLoop.updateChannel -> EpollPoller.updateChannel -> EPollPoller.update
+    // 为啥要绕一圈呢？因为Poller才能操作fd的属性，所以要借助EventLoop调用epoll的方法
 }
 
 EventLoop::~EventLoop()
@@ -99,9 +81,9 @@ void EventLoop::loop()
 
     while (!quit_)
     {
-        activeChannels_.clear(); // 要先清空
+        activeChannels_.clear();                                        // 要先清空
         pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_); // 监听两类fd：一种是client的fd，一种是wakeupfd
-        for (Channel *channel : activeChannels_) // 挨个取出有活跃事件的channel，进行相应处理
+        for (Channel *channel : activeChannels_)                        // 挨个取出有活跃事件的channel，进行相应处理
         {
             channel->handleEvent(pollReturnTime_);
         }
