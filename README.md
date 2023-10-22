@@ -130,4 +130,4 @@ muduo网络库里的日志系统并不是很优秀
 
 下面这个图存一个档，我觉得画的不太贴合muduo网络库，但是抽象层面似乎挺有逻辑，看看能不能改进一下，结合muduo网络库具体的类再重制一下这个结构图
 
-<pre class="vditor-reset" placeholder="" contenteditable="true" spellcheck="false"><p data-block="0"><br class="Apple-interchange-newline"/><img src="https://vscode-remote+ssh-002dremote-002b218-002e192-002e110-002e150.vscode-resource.vscode-cdn.net/home/lfc/myGitHubRepos/simpleMuduo/image/README/1697973501183.png" alt="1697973501183"/></p></pre>
+![img]()
