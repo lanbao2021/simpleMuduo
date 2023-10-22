@@ -84,7 +84,8 @@ private:
     const int fd_;    // fd, Poller监听的对象
     int events_;      // 注册fd感兴趣的事件
     int revents_;     // poller返回的具体发生的事件
-    int index_;       // used by Poller.  Poller监听的对象在ChannelList中的索引位置
+
+    int index_; // 表示当前channel在poller中的状态，未添加、已添加、已删除（对应EPollPoller中的kNew、kAdded、kDeleted）
 
     std::weak_ptr<void> tie_; // 保存TcpConnection对象的弱引用，防止TcpConnection对象被手动remove掉，channel还在执行回调操作
     bool tied_;               // 是否绑定了TcpConnection对象
