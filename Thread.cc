@@ -26,8 +26,8 @@ Thread::~Thread()
 void Thread::start() // 一个Thread对象，记录的就是一个新线程的详细信息
 {
     started_ = true;
-    sem_t sem;
-    sem_init(&sem, false, 0);
+    sem_t sem;                // 信号量
+    sem_init(&sem, false, 0); // 初始化信号量
 
     // 开启线程
     thread_ = std::shared_ptr<std::thread>(new std::thread(
@@ -35,8 +35,10 @@ void Thread::start() // 一个Thread对象，记录的就是一个新线程的�
         [&]()
         {
             tid_ = CurrentThread::tid(); // 获取线程的tid值
-            sem_post(&sem);              // 发出信号，说明创建线程成功咯
-            func_();                     // 开启一个新线程，专门执行该线程函数
+
+            sem_post(&sem); // 发出信号，说明创建线程成功咯
+
+            func_(); // 线程的工作函数
         }));
 
     sem_wait(&sem); // 这里必须等待获取上面新创建的线程的tid值
@@ -44,7 +46,7 @@ void Thread::start() // 一个Thread对象，记录的就是一个新线程的�
 
 void Thread::join()
 {
-    joined_ = true;
+    joined_ = true;  // joined后就不能detached了
     thread_->join(); // 这是std::thread::join，不要理解成循环调用了
 }
 
