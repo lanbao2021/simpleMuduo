@@ -3,6 +3,7 @@
 
 #include <memory>
 
+
 EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop, const std::string &nameArg)
     : baseLoop_(baseLoop)
     , name_(nameArg)
@@ -12,19 +13,29 @@ EventLoopThreadPool::EventLoopThreadPool(EventLoop *baseLoop, const std::string 
 {}
 
 EventLoopThreadPool::~EventLoopThreadPool()
-{}
+{
+    // 无须析构堆内存中的对象，因为用了智能指针管理
+    // 其余的都是栈内存，自动释放
+}
 
 void EventLoopThreadPool::start(const ThreadInitCallback &cb)
 {
     started_ = true;
 
+    // 创建numThreads_个线程及其对应的EventLoop对象
     for (int i = 0; i < numThreads_; ++i)
     {
         char buf[name_.size() + 32];
         snprintf(buf, sizeof buf, "%s%d", name_.c_str(), i);
-        EventLoopThread *t = new EventLoopThread(cb, buf);
+        
+        // 创建EventLoopThread对象，里面会创建EventLoop对象和Thread对象
+        EventLoopThread *t = new EventLoopThread(cb, buf); 
+        
+        // 将EventLoopThread对象放入容器中
         threads_.push_back(std::unique_ptr<EventLoopThread>(t));
-        loops_.push_back(t->startLoop()); // new EventLoopThread只是初始化了一些成员变量，startLoop()后才真正创建了新线程和EventLoop
+
+        // 将EventLoop对象放入容器中，在startLoop()才会真正创建线程和EventLoop
+        loops_.push_back(t->startLoop()); 
     }
 
     // 整个服务端只有一个线程，运行着baseloop（这种情况必须传入有效的ThreadInitCallback对象）

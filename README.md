@@ -153,6 +153,41 @@ TCPServer对象里管理了多个loop对象，每次轮询的选一个，每个l
   * 就是将eventfd的活跃状态去除，把缓冲区的东西读出来即可
 * 然后再执行doPendingFunctors()，就完成了回调任务的执行
 
+
+## Thread
+
+封装了C++ 11的thread方法
+
+## EventLoopThread
+
+管理Thread及其对应的EventLoop
+
+One Loop Per Thread在这个类中得到了很好的体现
+
+## EventLoopThreadPool
+
+用于管理subloop及其对应thread
+
+baseloop不是用EventLoopThreadPool进行创建的
+
+并且EventLoopThreadPool还隶属于baseloop
+
+（看到后面的EchoServer案例会发现baseloop是需要单独创建的）
+
+## Socket
+
+
+## Acceptor
+
+## TcpServer
+
+## Buffer
+
+## TcpConnection
+
+# 测试案例：EchoServer
+
+
 # 多Reactor 多线程
 
 这里有一个问题后续再明确一下，就是SubReactor是否会将业务处理交给WorkThread
