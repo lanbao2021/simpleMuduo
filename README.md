@@ -17,21 +17,6 @@ A simplified Muduo network lib using C++ 11 features.
 
 按如下顺序去梳理的话会比较合适
 
-* [X] noncopyable
-* [X] Logger
-* [X] Timestamp
-* [X] InetAddress
-* [X] Channel
-* [X] Poller
-* [X] EpollPoller
-* [ ] 获取线程tid
-* [ ] EventLoop
-* [ ] Thread
-* [ ] EventLoopThread
-* [ ] Socket
-* [ ] Acceptor
-* [ ] TcpServer
-
 ## noncopyable
 
 noncopyable被继承以后，派生类对象可以正常的构造和析构，但是派生类对象无法进行拷贝构造和赋值操作
