@@ -17,6 +17,10 @@ A simplified Muduo network lib using C++ 11 features.
 
 按如下顺序去梳理的话会比较合适
 
+当然，后续熟练度比较高了可以直接看EchoServer案例
+
+然后剖析EchoServer是如何基于该网络库构建并运行的
+
 ## noncopyable
 
 noncopyable被继承以后，派生类对象可以正常的构造和析构，但是派生类对象无法进行拷贝构造和赋值操作
