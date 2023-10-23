@@ -47,7 +47,7 @@ EventLoop *EventLoopThread::startLoop()
  */
 void EventLoopThread::threadFunc()
 {
-    EventLoop loop;
+    EventLoop loop; // 创建EventLoop对象，与本EventLoopThread的Thread对象相对应的
 
     if (callback_)
     {
