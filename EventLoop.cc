@@ -116,12 +116,12 @@ void EventLoop::loop()
  */
 void EventLoop::quit()
 {
-    quit_ = true;
+    quit_ = true; // 将当前loop对象的quit_置为true
 
-    // 如果是在其它线程中，调用的quit   在一个subloop(woker)中，调用了mainLoop(IO)的quit
+    // 但是修改当前loop对象的线程不一定是当前loop对象所在的线程，所以要唤醒loop所在的线程
     if (!isInLoopThread())
     {
-        wakeup();
+        wakeup(); // 唤醒之后就可以结束loop方法里的while循环了
     }
 }
 
@@ -174,11 +174,11 @@ void EventLoop::handleRead()
     }
 }
 
-// 用来唤醒loop所在的线程的  向wakeupfd_写一个数据，wakeupChannel就发生读事件，当前loop线程就会被唤醒
+// 用来唤醒loop所在的线程的
 void EventLoop::wakeup()
 {
     uint64_t one = 1;
-    ssize_t n = write(wakeupFd_, &one, sizeof one);
+    ssize_t n = write(wakeupFd_, &one, sizeof one); // 写完之后EvnentLoop::loop里的poller_->poll就会返回
     if (n != sizeof one)
     {
         LOG_ERROR("EventLoop::wakeup() writes %lu bytes instead of 8 \n", n);
@@ -208,7 +208,7 @@ void EventLoop::doPendingFunctors() // 执行回调
 
     {
         std::unique_lock<std::mutex> lock(mutex_);
-        functors.swap(pendingFunctors_);
+        functors.swap(pendingFunctors_); // 减小加锁粒度，提高效率
     }
 
     for (const Functor &functor : functors)
