@@ -109,6 +109,52 @@ muduo网络库里的日志系统并不是很优秀
 
 ## EventLoop
 
+
+
+
+
+### baseloop和subloop之间的通信机制
+
+EventLoop里面的runInLoop、queueInLoop方法一开始把我搞晕了
+
+在runInLoop里面有这么一段逻辑
+
+```c++
+    if (isInLoopThread()) // 在当前的loop线程中，执行cb
+    {
+        cb();
+    }
+    else // 在非当前loop线程中执行cb , 就需要唤醒loop所在线程，执行cb
+    {
+        queueInLoop(cb);
+    }
+```
+
+那什么时候会出现queueInLoop(cb)的情况呢
+
+TCPServer对象里管理了多个loop对象，每次轮询的选一个，每个loop对象都属于不同的线程，假设TCPServer对应的那一个叫baseloop，那么被它选出来干活的就叫subloop
+
+具体可以看一下TcpServer::newConnection方法
+
+* 首先它轮询选择一个subloop对象用来干活
+* 此时你要意识到，能执行newConnection方法的是baseloop
+* 也就是说我们会在baseloop里面执行subloop的runInLoop方法
+* 理解到这一步就算正确理解了runInLoop和queueInLoop的设计用意
+
+那么接下来问题又来了，queueInLoop后baseloop如何通知subloop干活呢，因为光给subloop添加待执行的回调函数并没有办法让它执行！
+
+这就是EventLoop::queueInLoop方法里的wakeup()方法的作用了，他可以帮baseloop唤醒subloop里面正阻塞在：⬇️
+
+`poller_->poll(kPollTimeMs, &activeChannels_) `的 `EventLoop::loop`方法
+
+(注：不喊他起床wakeup也行，但是要等 `kPollTimeMs`直到它睡醒)
+
+每个eventloop都会有一个eventfd文件描述符，每个eventloop也会监听这个eventfd文件描述符，因此wakeup就是通过往eventfd里随便写点东西，然后让阻塞的Poller检测到有可读事件发生，然后就立即返回了
+
+* 返回后先经过for (Channel *channel : activeChannels_)
+  * 就是将eventfd的活跃状态去除，把缓冲区的东西读出来即可
+* 然后再执行doPendingFunctors()，就完成了回调任务的执行
+
 # 多Reactor 多线程
 
 这里有一个问题后续再明确一下，就是SubReactor是否会将业务处理交给WorkThread

@@ -54,13 +54,11 @@ EventLoop::EventLoop()
         t_loopInThisThread = this; // 防止同一个thread创建两个EventLoop
     }
 
-    
-
     // 当wakeupChannel_上有读事件发生时，就会调用当前EventLoop的handleRead()方法
     // readCallback_ = std::bind(&EventLoop::handleRead, this) 后this->handleRead()等价于readCallback_()
     // 这里有一个bug，setReadCallback对应using ReadEventCallback = std::function<void(Timestamp)>;而handleRead没有参数，为啥也能正常编译不报错呢？
     wakeupChannel_->setReadCallback(std::bind(&EventLoop::handleRead, this)); // 先设置回调函数
-    wakeupChannel_->enableReading(); // 开启事件监听
+    wakeupChannel_->enableReading();                                          // 开启事件监听
     // enableReading虽然是Channel对象封装的方法，但实际上是这么一个过程：
     // Channel.enableReading -> Channel.update -> EventLoop.updateChannel -> EpollPoller.updateChannel -> EPollPoller.update
     // 为啥要绕一圈呢？因为Poller才能操作fd的属性，所以要借助EventLoop调用epoll的方法
@@ -87,23 +85,20 @@ void EventLoop::loop()
     while (!quit_)
     {
         // 要先清空上一次使用的activeChannels_里的内容
-        activeChannels_.clear();    
+        activeChannels_.clear();
 
-        // 获取当前活跃的事件，返回的是发生事件的fd的个数           
-        // 这里监听了两类fd：一种是client的fd，一种是wakeupfd                         
-        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_); 
+        // 获取当前活跃的事件，返回的是发生事件的fd的个数
+        // 这里监听了两类fd：一种是client的fd，一种是wakeupfd
+        pollReturnTime_ = poller_->poll(kPollTimeMs, &activeChannels_);
 
         // 挨个取出有活跃事件的channel，进行相应处理
-        for (Channel *channel : activeChannels_)                        
+        for (Channel *channel : activeChannels_)
         {
             // Poller监听哪些channel发生了事件，上报给EventLoop，EventLoop再调用Channel的handleEvent方法
             channel->handleEvent(pollReturnTime_);
         }
 
         // 执行当前EventLoop事件循环需要处理的回调操作
-        // 为啥处理完activeChannels_后，还要处理pendingFunctors_呢？
-        // 27 EventLoop事件循环三_ev.mp4 这个视频里有提到，但是我觉得讲的有些乱
-        // 后续要倒回来理顺一下
         doPendingFunctors();
     }
 
@@ -130,33 +125,35 @@ void EventLoop::quit()
     }
 }
 
-// 在当前loop中执行cb
+// 在eventloop中执行回调函数
 void EventLoop::runInLoop(Functor cb)
 {
-    if (isInLoopThread()) // 在当前的loop线程中，执行cb
+    // 调用runInLoop的loop对象对应线程和当前线程是同一个线程，就直接执行cb
+    // 有点绕，但是要知道，baseloop里面通过轮询算法管理着多个subloop
+    // 所以会出现baseloop调用subloop对象的runInLoop方法
+    if (isInLoopThread())
     {
         cb();
     }
-    else // 在非当前loop线程中执行cb , 就需要唤醒loop所在线程，执行cb
+    else
     {
+        // 当前线程和loop对象记录的线程id不一致，那么就把cb放到loop对象的等待队列中
         queueInLoop(cb);
     }
 }
 
-// 把cb放入队列中，唤醒loop所在的线程，执行cb
+// 把回调函数cb放入待执行队列中，唤醒loop所在的线程，执行cb
 void EventLoop::queueInLoop(Functor cb)
 {
-    {
+    { // 进入临界区
         std::unique_lock<std::mutex> lock(mutex_);
         pendingFunctors_.emplace_back(cb);
-    }
+    } // 离开临界区
 
-    // 唤醒相应的，需要执行上面回调操作的loop的线程了
-    // || callingPendingFunctors_的意思是：当前loop正在执行回调，但是loop又有了新的回调
+    // 当前线程不是loop所在线程，或者loop正在执行回调，那么就唤醒loop所在的线程
     if (!isInLoopThread() || callingPendingFunctors_)
     {
-        wakeup(); // 唤醒loop所在线程 （这其实是this->wakeup())
-        // ？？？难道不是自己叫醒自己吗，这里没懂
+        wakeup();
     }
 }
 
@@ -169,7 +166,7 @@ void EventLoop::queueInLoop(Functor cb)
  */
 void EventLoop::handleRead()
 {
-    uint64_t one = 1; 
+    uint64_t one = 1;
     ssize_t n = read(wakeupFd_, &one, sizeof one);
     if (n != sizeof one)
     {
