@@ -65,12 +65,9 @@ EventLoop* EventLoopThreadPool::getNextLoop()
 
 std::vector<EventLoop*> EventLoopThreadPool::getAllLoops()
 {
-    if (loops_.empty())
+    if (loops_.empty()) // 没有subloop时，返回baseLoop_
     {
         return std::vector<EventLoop*>(1, baseLoop_);
     }
-    else
-    {
-        loops_;
-    }
+    return loops_; // 返回所有的subloop
 }

@@ -34,7 +34,7 @@ public:
 
     int fd() const { return fd_; }
     int events() const { return events_; }
-    int set_revents(int revt) { revents_ = revt; } // used by pollers
+    int set_revents(int revt) { return revents_ = revt; } // used by pollers
 
     void enableReading() // 用于开启fd的读事件
     {
